@@ -3,14 +3,10 @@ import axios from "axios";
 
 export const testMove = (gameId, start, end, user) => {
   const move = start + end;
+  console.log("in test move frontend", move)
   return axios.post(
-    `https://lichess.org/api/board/game/${gameId}/move/${move}`,
-    "",
-    {
-      headers: {
-        Authorization: `Bearer ${user === user1 ? token1 : token2}`,
-      },
-    }
+    `http://localhost:5001/game/move`,
+    {gameId, token: user === user1 ? token1 : token2, move },
   );
 };
 

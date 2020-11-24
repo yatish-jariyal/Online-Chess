@@ -12,7 +12,7 @@ function AcceptChallengePage(props) {
 
   useEffect(() => {
     acceptChallenge(gameId);
-  }, [gameId, acceptChallenge]);
+  }, [gameId]);
 
   console.log(gameId);
   return status ? (

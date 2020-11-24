@@ -16,7 +16,7 @@ export const checkIfPlayerHasMoved = (gameId) => async (dispatch) => {
     await dispatch(streamBoardGameState(gameId));
     const status = store.getState().chessState.status;
     const gameBoardState = store.getState().chessState.gameBoardState;
-    const numMoves = gameBoardState ? gameBoardState.split(" ").length : 0;
+    const numMoves = gameBoardState ? gameBoardState.length : 0;
     if (numMoves % 2 === 0) {
       //next turn is white
       dispatch(saveCurrentPlayer(1));
@@ -61,7 +61,14 @@ export const exportAllStudyChapters = () => async (dispatch) => {
 };
 
 export const streamBoardGameState = (gameId) => async (dispatch) => {
-  axios
+  axios.post('http://localhost:5001/game/getGameState', {gameId, token: token2})
+  .then(res => {
+    if(res.data.moves) {
+      dispatch(saveGameBoardState(res.data.moves))
+    }
+  })
+  .catch(err => console.log(err))
+ /* axios
     .get(`https://lichess.org/api/board/game/stream/${gameId}`, {
       headers: {
         Authorization: `Bearer ${token2}`,
@@ -77,6 +84,7 @@ export const streamBoardGameState = (gameId) => async (dispatch) => {
       }
     })
     .catch((err) => console.log(err));
+    */
 };
 
 export const getGameBoardState = (gameId) => async (dispatch) => {
@@ -92,10 +100,22 @@ export const getGameBoardState = (gameId) => async (dispatch) => {
     .catch((err) => console.log("game board state", err));
 };
 
+export const checkGameStatus = (gameId) => dispatch => {
+  console.log("in check game status")
+  axios.post('http://localhost:5001/game/status', {gameId})
+  .then(res => {
+    if(res.data.status === "started") {
+      dispatch(saveGameStatus("started"))
+    }
+  })
+  .catch((err) => console.log(err));
+}
+
 export const checkIfChallengeAccepted = (gameId) => async (dispatch) => {
   let time = 0;
+  console.log("in check if challenge accepted")
   const myInteval = setInterval(() => {
-    dispatch(streamBoardGameState(gameId));
+    dispatch(checkGameStatus(gameId));
     if (store.getState().chessState.status === "started") {
       clearInterval(myInteval);
     }

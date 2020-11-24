@@ -5,7 +5,8 @@ import {
   streamBoardGameState,
   checkIfChallengeAccepted,
 } from "./chessActions";
-import { saveUser, saveGameId } from "./saveActions";
+ 
+import { saveUser, saveGameId, saveGameStatus } from "./saveActions";
 
 const proxyurl = "https://cors-anywhere.herokuapp.com/";
 
@@ -29,22 +30,14 @@ export const resignGame = (gameId, currentPlayer) => async (dispatch) => {
 };
 
 export const acceptChallenge = (gameId) => async (dispatch) => {
-  axios
-    .post(
-      `${proxyurl}https://lichess.org/api/challenge/${gameId}/accept`,
-      null,
-      {
-        headers: {
-          Authorization: `Bearer ${token2}`,
-        },
-      }
-    )
-    .then((res) => {
-      console.log("accepted");
-      dispatch(saveUser(user2));
-      dispatch(streamBoardGameState(gameId));
-    })
-    .catch((err) => console.log(err));
+  axios.post('http://localhost:5001/challenge/accept', {gameId, token: token2})
+  .then(res => {
+    console.log("accept response", res)
+    dispatch(saveUser(user2))
+    dispatch(saveGameStatus("started"))
+    //dispatch(streamBoardGameState(gameId));
+  })
+  .catch((err) => console.log(err));
 };
 
 export const handleDrawOffer = (gameId, playerReceiving, accept) => async (
@@ -64,6 +57,14 @@ export const handleDrawOffer = (gameId, playerReceiving, accept) => async (
 };
 
 export const createChallenge = () => async (dispatch) => {
+  axios.post('http://localhost:5001/challenge/newGame', {opponent: user2, token: token1})
+  .then(res => {
+    console.log("response", res)
+    dispatch(saveGameId(res.data.gameId))
+    dispatch(saveUser(user1))
+    dispatch(checkIfChallengeAccepted(res.data.gameId));
+  })
+  /*
   axios
     .post(`https://lichess.org/api/challenge/${user2}`, null, {
       headers: {
@@ -78,4 +79,5 @@ export const createChallenge = () => async (dispatch) => {
       dispatch(checkIfChallengeAccepted(res.data.challenge.id));
     })
     .catch((err) => console.log(err));
+    */
 };

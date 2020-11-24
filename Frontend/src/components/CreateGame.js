@@ -4,18 +4,10 @@ import { connect } from "react-redux";
 import { createChallenge } from "../redux/actions/userActions";
 import { Redirect } from "react-router-dom";
 
-const baseUrl = "https://guarded-bastion-85239.herokuapp.com";
+const herokuUrl = "https://guarded-bastion-85239.herokuapp.com";
+const baseUrl = "https://localhost:3000";
 
 function CreateGame(props) {
-  const { createChallenge } = props;
-
-  useEffect(() => {
-    //create challenge
-    createChallenge();
-    //show popup window with link and waiting for player to accept
-    //redirect to /game/:gameId
-  }, [createChallenge]);
-
   return props.status === "started" ? (
     <Redirect to={`/game/${props.gameId}`} />
   ) : (

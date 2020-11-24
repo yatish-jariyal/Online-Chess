@@ -143,7 +143,7 @@ function Board(props) {
       testMove(gameId, start, end, props.user)
         .then((res) => {
           //console.log("moving", startRow, startCol);
-
+          console.log("test move")
           const updated = movePieceOnBoard(
             startRow,
             startCol,

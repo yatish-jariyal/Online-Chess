@@ -1,32 +1,25 @@
-import React, { Component } from "react";
+import React, { useState } from "react";
 import { Button, Jumbotron, Container, Table, Col, Row } from "react-bootstrap";
 import CreateGame from "../components/CreateGame";
+import {connect} from 'react-redux'
+import {createChallenge} from '../redux/actions/userActions'
 
-class HomePage extends Component {
-  state = {
-    show: false,
-  };
-  handleClose = () => {
-    this.setState((prevState) => ({
-      ...prevState,
-      show: false,
-    }));
-  };
-  handleShow = () => {
-    this.setState((prevState) => ({
-      prevState,
-      show: true,
-    }));
+const HomePage = (props) =>  {
+  const [show, setShow] = useState(false)
+
+  const handleClose = () => {
+    setShow(false)
   };
 
-  handleClick = () => {
-    console.log("clicked");
-    this.setState((prevState) => ({
-      ...prevState,
-      show: true,
-    }));
+  const handleShow = () => {
+    setShow(true)
   };
-  render() {
+
+ const handleClick = () => {
+    setShow(true)
+    props.createChallenge()
+  };
+
     return (
       <div className="App pb-5" id="jumbotron">
         <Jumbotron fluid id="jumbotron">
@@ -48,7 +41,7 @@ class HomePage extends Component {
                   their current properties in Spain in the late 15th century,
                   and the modern rules were standardized in the 19th century.
                 </p>
-                <Button onClick={this.handleClick}>Play Now</Button>
+                <Button onClick={handleClick}>Play Now</Button>
               </Col>
               <Col lg={1} />
               <Col lg={5}>
@@ -150,10 +143,10 @@ class HomePage extends Component {
             </Table>
           </Row>
         </Container>
-        <CreateGame show={this.state.show} handleClose={this.handleClose} />
+        <CreateGame show={show} handleClose={handleClose} />
       </div>
     );
   }
-}
 
-export default HomePage;
+
+export default connect(null, {createChallenge})( HomePage)
