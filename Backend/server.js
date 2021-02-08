@@ -26,7 +26,7 @@ mongoose.connect(db, {useNewUrlParser: true, useUnifiedTopology: true})
 app.use("/users", users)
 app.use("/challenge", challenges)
 app.use("/game", games)
-const port = 5001;
+const port = process.env.PORT || 5001;
 
 if(process.env.NODE_ENV === 'production') {
   app.use(express.static(path.join(__dirname, '/Frontend/build')))
