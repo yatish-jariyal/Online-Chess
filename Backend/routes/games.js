@@ -28,6 +28,7 @@ router.post("/move", (req, res) => {
                     res.status(400).send(err)
                 })
         })
+        
 })
 
 router.post("/getGameState", (req, res) => {
