@@ -6,11 +6,12 @@ const users = require('./routes/users')
 const challenges = require('./routes/challenges')
 const games = require('./routes/games')
 const path = require("path")
+const dotenv = require("dotenv")
 
 const app = express()
 app.use(express.json())
 app.use(cors())
-app.use(require('dotenv').config())
+dotenv.config()
 //routes -> baseurl/post/postid -> get and post
 //schema -> 
 //database uri
