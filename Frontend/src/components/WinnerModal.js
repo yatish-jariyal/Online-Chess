@@ -16,7 +16,6 @@ function WinnerModal(props) {
       }
     }
 
-    console.log("showing");
   }, [props.status, props.winner]);
 
   const handleClose = () => {
@@ -24,7 +23,6 @@ function WinnerModal(props) {
     setShow(false);
   };
 
-  console.log("status", props.status);
   return close ? (
     <Redirect to="/" />
   ) : (

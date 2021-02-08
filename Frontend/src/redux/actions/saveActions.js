@@ -60,9 +60,13 @@ export const saveGameBoardState = (gameBoardState) => {
   };
 };
 
-export const saveWhiteAndBlack = (white, black) => {
-  return {
-    type: "SAVE_WHITE_AND_BLACK",
-    payload: { white, black },
-  };
-};
+export const saveWhite = (white) => ({
+  type: "SAVE_WHITE",
+  payload: white
+})
+
+export const saveBlack = (black) => ({
+  type: "SAVE_BLACK",
+  payload: black
+})
+

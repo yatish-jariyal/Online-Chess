@@ -32,12 +32,16 @@ const chessReducer = (state = initialState, action) => {
         ...state,
         piecesCapturedByWhite: [...state.piecesCapturedByWhite, payload],
       };
-    case "SAVE_WHITE_AND_BLACK":
+    case "SAVE_WHITE":
       return {
         ...state,
-        white: payload.white,
-        black: payload.black,
+        white: payload,
       };
+    case "SAVE_BLACK":
+      return {
+        ...state,
+        black: payload
+      }
     case "SAVE_USER":
       return {
         ...state,

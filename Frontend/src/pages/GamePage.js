@@ -9,7 +9,6 @@ import Board from "../components/Board";
 class GamePage extends Component {
   render() {
     const gameId = this.props.match.params.gameId;
-    console.log("flip board", this.props.flipBoard);
     return (
       <Row
         className="justify-content-center align-items-center py-5"

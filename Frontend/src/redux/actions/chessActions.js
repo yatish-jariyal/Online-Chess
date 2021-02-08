@@ -1,4 +1,4 @@
-import { token1, token2 } from "../../config";
+import keys from "../../config";
 import axios from "axios";
 import store from "../reducers/store";
 import {
@@ -6,16 +6,17 @@ import {
   saveGameStatus,
   saveCurrentPlayer,
   saveWinner,
-  saveWhiteAndBlack,
 } from "./saveActions";
 //sec-fetch-site: same-origin
+const { token1, token2 } = keys
 
-export const checkIfPlayerHasMoved = (gameId) => async (dispatch) => {
+export const checkIfPlayerHasMoved = (gameId) => async (dispatch, getState) => {
   //check every 10 seconds
+  console.log("in check if player has moved")
   const myInterval = setInterval(async () => {
     await dispatch(streamBoardGameState(gameId));
-    const status = store.getState().chessState.status;
-    const gameBoardState = store.getState().chessState.gameBoardState;
+    const status = getState().chessState.status;
+    const gameBoardState = getState().chessState.gameBoardState;
     const numMoves = gameBoardState ? gameBoardState.length : 0;
     if (numMoves % 2 === 0) {
       //next turn is white
@@ -50,58 +51,18 @@ export const updatePiecePositions = (piecePositions) => {
   };
 };
 
-export const exportAllStudyChapters = () => async (dispatch) => {
-  const studyId = "36cRQa9R";
-  axios
-    .get(`https://lichess.org/study/${studyId}.pgn`)
-    .then((res) => {
-      console.log("study", res);
-    })
-    .catch((err) => console.log("study", err));
-};
-
 export const streamBoardGameState = (gameId) => async (dispatch) => {
   axios.post('http://localhost:5001/game/getGameState', {gameId, token: token2})
   .then(res => {
+    console.log("res", res.data)
     if(res.data.moves) {
       dispatch(saveGameBoardState(res.data.moves))
     }
   })
   .catch(err => console.log(err))
- /* axios
-    .get(`https://lichess.org/api/board/game/stream/${gameId}`, {
-      headers: {
-        Authorization: `Bearer ${token2}`,
-      },
-    })
-    .then((res) => {
-      if (res.data.state) {
-        dispatch(saveGameStatus(res.data.state.status));
-        dispatch(saveGameBoardState(res.data.state.moves));
-        if(res.data.state.winner) {
-          dispatch(saveWinner(res.data.state.winner))
-        }
-      }
-    })
-    .catch((err) => console.log(err));
-    */
-};
-
-export const getGameBoardState = (gameId) => async (dispatch) => {
-  axios
-    .get(`https://lichess.org/api/board/game/stream/${gameId}`, {
-      headers: {
-        Authorization: `Bearer ${token2}`,
-      },
-    })
-    .then((res) => {
-      dispatch(saveWhiteAndBlack(res.data.white.id, res.data.black.id));
-    })
-    .catch((err) => console.log("game board state", err));
 };
 
 export const checkGameStatus = (gameId) => dispatch => {
-  console.log("in check game status")
   axios.post('http://localhost:5001/game/status', {gameId})
   .then(res => {
     if(res.data.status === "started") {
@@ -113,7 +74,6 @@ export const checkGameStatus = (gameId) => dispatch => {
 
 export const checkIfChallengeAccepted = (gameId) => async (dispatch) => {
   let time = 0;
-  console.log("in check if challenge accepted")
   const myInteval = setInterval(() => {
     dispatch(checkGameStatus(gameId));
     if (store.getState().chessState.status === "started") {
@@ -124,24 +84,14 @@ export const checkIfChallengeAccepted = (gameId) => async (dispatch) => {
       clearInterval(myInteval);
     }
   }, 10000);
-  console.log("interval cleared");
 };
 
 export const getGameState = (gameId) => async (dispatch) => {
   axios
-    .get(`https://lichess.org/api/board/game/stream/${gameId}`, {
-      headers: {
-        Authorization: `Bearer ${token1}`,
-      },
-    })
+    .get(`http://localhost:5001/${gameId}`)
     .then((res) => {
-      if (res.data.state && res.data.state.status === "mate") {
-        dispatch(saveGameStatus(res.data.state.status));
-        dispatch(saveWinner(res.data.state.winner));
-      } else if (res.data.state && res.data.state.status) {
-        dispatch(saveGameStatus(res.data.state.status));
-        dispatch(saveWinner(res.data.state.winner));
-      }
+      dispatch(saveGameStatus(res.data.status));
+      dispatch(saveWinner(res.data.winner));
     })
     .catch((err) => console.log(err));
 };

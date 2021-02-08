@@ -1,6 +1,5 @@
 {
-    "board": {
-        "create a seek": "https://lichess.org/api/board/seek",
-        ""
-    }
+  "board": {
+    "create a seek": "https://lichess.org/api/board/seek"
+  }
 }

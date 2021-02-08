@@ -36,7 +36,7 @@ function MovesList(props) {
             </thead>
             <tbody>
               {props.moves &&
-                props.moves.split(" ").map((move, id) => (
+                props.moves.map((move, id) => (
                   <tr key={id}>
                     <td>{id + 1}</td>
                     <td>{id % 2 === 1 ? "Black" : "White"}</td>

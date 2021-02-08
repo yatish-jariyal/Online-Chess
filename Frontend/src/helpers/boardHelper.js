@@ -361,30 +361,24 @@ export const movePiece = (
     }
   }
   return piecePositions.map((row, i) => {
-    console.log(rows[i], startRow, endRow);
     if (rows[i] === startRow || rows[i] === endRow) {
       if (rows[i] === startRow && rows[i] === endRow) {
         const updatedRow = row.map((col, j) => {
           if (columns[j] === startCol) {
-            console.log("removing", startRow, startCol);
             //remove
             return { ...col, piece: null };
           } else if (columns[j] === endCol) {
-            console.log("placing");
             //check if any piece is captured
             //if yes then store it in redux
             const pieceCaptured =
               piecePositions[rows.indexOf(endRow)][columns.indexOf(endCol)]
                 .piece;
-            console.log("piece captured", pieceCaptured);
             if (pieceCaptured) {
               //store it in redux
               if (pieceCaptured.length === 2) {
                 dispatch(addPieceCapturedByBlack(pieceCaptured));
-                console.log("calling piece Captured BY black");
               } else {
                 dispatch(addPieceCapturedByWhite(pieceCaptured));
-                console.log("calling piece Captured BY white");
               }
             }
             return { ...col, piece: activePiece };
@@ -395,7 +389,6 @@ export const movePiece = (
       } else if (rows[i] === startRow) {
         const updatedRow = row.map((col, j) => {
           if (columns[j] === startCol) {
-            console.log("removing", startRow, startCol);
             //remove
             return { ...col, piece: null };
           }
@@ -403,31 +396,27 @@ export const movePiece = (
         });
         return updatedRow;
       } else if (rows[i] === endRow) {
-        console.log("matched endRow");
         const updatedRow = row.map((col, j) => {
           if (columns[j] === endCol) {
-            console.log("placing", endRow, endCol);
             //put the piece
             //check if any piece is captured
             //if yes then store it in redux
             const pieceCaptured =
               piecePositions[rows.indexOf(endRow)][columns.indexOf(endCol)]
                 .piece;
-            console.log("piece captured", pieceCaptured);
             if (pieceCaptured) {
               //store it in redux
               if (pieceCaptured.length === 2) {
                 dispatch(addPieceCapturedByBlack(pieceCaptured));
-                console.log("calling piece Captured BY black");
               } else {
                 dispatch(addPieceCapturedByWhite(pieceCaptured));
-                console.log("calling piece Captured BY white");
               }
             }
             return { ...col, piece: activePiece };
           }
           return col;
         });
+
         return updatedRow;
       }
     } else return row;
@@ -479,8 +468,6 @@ export const checkIfCastle = (
   piecePositions,
   activePiece
 ) => {
-  console.log("here", startRow, startCol, endRow, endCol);
-  console.log("active piece", activePiece);
   if (activePiece === "WK" || activePiece === "K") {
     if (startRow === "1") {
       if (startCol === "e") {
@@ -488,7 +475,6 @@ export const checkIfCastle = (
           //long castle white king
 
           //king will move from e1 to c1
-          console.log("moving white king");
           let updated = movePiece(
             "1",
             "e",
@@ -498,14 +484,12 @@ export const checkIfCastle = (
             activePiece
           );
 
-          console.log("moving white rook");
           //rook will move from a1 to d1
           return movePiece("1", "a", "1", "d", updated, "WR");
         } else if (endCol === "g") {
           //short castle white king
 
           //king will move from e1 to g1
-          console.log("moving white king");
           let updated = movePiece(
             "1",
             "e",
@@ -515,7 +499,6 @@ export const checkIfCastle = (
             activePiece
           );
 
-          console.log("moving white rook");
           //rook will move from h1 to f1
           return movePiece("1", "h", "1", "f", updated, "WR");
         } else return false;
@@ -526,7 +509,6 @@ export const checkIfCastle = (
           //long castle white king
 
           //king will move from e8 to c8
-          console.log("moving black king");
           let updated = movePiece(
             "8",
             "e",
@@ -536,14 +518,12 @@ export const checkIfCastle = (
             activePiece
           );
 
-          console.log("moving black rook");
           //rook will move from a8 to d8
           return movePiece("8", "a", "8", "d", updated, "R");
         } else if (endCol === "g") {
           //short castle white king
 
           //king will move from e8 to g8
-          console.log("moving black king");
           let updated = movePiece(
             "8",
             "e",
@@ -553,7 +533,6 @@ export const checkIfCastle = (
             activePiece
           );
 
-          console.log("moving black rook");
           //rook will move from h8 to f8
           return movePiece("8", "h", "8", "f", updated, "R");
         } else return false;

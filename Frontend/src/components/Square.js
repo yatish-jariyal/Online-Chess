@@ -1,8 +1,7 @@
-import React, { Component } from "react";
+import React from "react";
 import Piece from "./Piece";
-class Square extends Component {
-  render() {
-    const { id, piece, color, isActive, handleClick } = this.props;
+
+const Square = ({id, piece, color, isActive, handleClick}) => {
     return (
       <div
         className="d-flex justify-content-center align-items-center"
@@ -15,10 +14,9 @@ class Square extends Component {
           backgroundColor: isActive ? "yellow" : color,
         }}
       >
-        {this.props.piece && <Piece piece={piece} />}
+        {piece && <Piece piece={piece} />}
       </div>
     );
-  }
 }
 
 export default Square;

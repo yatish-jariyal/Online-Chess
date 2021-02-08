@@ -1,9 +1,10 @@
-import { user1, user2, token1, token2 } from "../config";
+import keys from "../config";
 import axios from "axios";
+
+const { user1, user2, token1, token2 } = keys
 
 export const testMove = (gameId, start, end, user) => {
   const move = start + end;
-  console.log("in test move frontend", move)
   return axios.post(
     `http://localhost:5001/game/move`,
     {gameId, token: user === user1 ? token1 : token2, move },
